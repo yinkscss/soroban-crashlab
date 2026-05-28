@@ -1,6 +1,6 @@
 import * as assert from 'node:assert/strict';
-import { buildMockRuns } from '../mockRuns';
-import type { FuzzingRun } from '../types';
+import { buildMockRuns } from '../../mockRuns';
+import type { FuzzingRun } from '../../types';
 
 const VALID_STATUSES = new Set(['running', 'completed', 'failed', 'cancelled']);
 const VALID_AREAS = new Set(['auth', 'state', 'budget', 'xdr']);
