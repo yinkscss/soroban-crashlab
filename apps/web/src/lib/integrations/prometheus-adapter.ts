@@ -10,6 +10,8 @@ export interface PrometheusAdapterOptions {
   labels?: Record<string, string>;
   pushPath?: string;
   healthPath?: string;
+  timeoutMs?: number;
+  headers?: Record<string, string>;
   fetchImpl?: typeof fetch;
 }
 
@@ -30,12 +32,28 @@ function joinUrl(base: string, path?: string): string {
 }
 
 function toExportConfig(options: PrometheusAdapterOptions): ExportConfig {
+  const endpoint = trimTrailingSlash(options.endpoint);
+
   return {
-    endpoint: trimTrailingSlash(options.endpoint),
+    endpoint,
     interval: options.interval ?? 15,
-    enabled: options.enabled ?? true,
+    enabled: (options.enabled ?? true) && endpoint.length > 0,
     labels: options.labels ?? {},
   };
+}
+
+function createAbortSignal(timeoutMs: number | undefined): AbortSignal | undefined {
+  if (!timeoutMs || timeoutMs <= 0) {
+    return undefined;
+  }
+
+  if (typeof AbortSignal !== 'undefined' && 'timeout' in AbortSignal) {
+    return AbortSignal.timeout(timeoutMs);
+  }
+
+  const controller = new AbortController();
+  setTimeout(() => controller.abort(), timeoutMs);
+  return controller.signal;
 }
 
 async function parsePushedSeries(response: Response): Promise<number> {
@@ -59,6 +77,8 @@ export function createPrometheusMetricsExportDependencies(
   options: PrometheusAdapterOptions,
 ): MetricsExportDependencies {
   const fetchImpl = options.fetchImpl ?? fetch;
+  const defaultHeaders = options.headers ?? {};
+  const signal = createAbortSignal(options.timeoutMs);
 
   return {
     async resolveConfig() {
@@ -72,7 +92,9 @@ export function createPrometheusMetricsExportDependencies(
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
+          ...defaultHeaders,
         },
+        signal,
         body: JSON.stringify({
           endpoint: config.endpoint,
           interval: config.interval,
@@ -92,7 +114,9 @@ export function createPrometheusMetricsExportDependencies(
         method: 'GET',
         headers: {
           Accept: 'application/json',
+          ...defaultHeaders,
         },
+        signal,
       });
 
       return {
