@@ -33,12 +33,10 @@ import FailureClusterView from "./FailureClusterView";
 import MaintainerToggle from "./MaintainerToggle";
 import { useMaintainerMode } from "./useMaintainerMode";
 import AlertPresets from "./AlertPresets";
-import CreateReportingTemplatesPage60 from "./create-reporting-templates-page-60";
 import TimelineScrubber from "./TimelineScrubber";
 import ColumnCustomization, { ColumnId } from "./add-column-customization";
 import CampaignMilestoneTimeline from "./campaign-milestone-timeline-55";
 import VirtualizedRunTable from "./implement-virtualized-run-table-component";
-import ReportingTemplatesManager from "./add-reporting-templates-manager";
 import AutomatedRegressionDeployIntegration from "./integrate-automated-regression-deploy-integration";
 import IntegrationTestHarnessForUIFlows from "./integrate-integration-test-harness-for-ui-flows";
 import ReportGenerator from "./add-report-generator";
@@ -1175,14 +1173,6 @@ function HomeContent() {
                 console.log("Applied Alert Preset:", config)
               }
             />
-          </div>
-
-          <div className="mb-12 w-full">
-            <CreateReportingTemplatesPage60 />
-          </div>
-
-          <div className="mb-12 w-full">
-            <ReportingTemplatesManager />
           </div>
 
           <div className="mb-12 w-full">
