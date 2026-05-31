@@ -209,6 +209,14 @@ impl CrashIndexSummary {
         }
         out
     }
+
+    /// Serializes the summary to pretty JSON bytes for Rust ↔ Next.js data bridge.
+    ///
+    /// # Errors
+    /// Returns a serde_json error if serialization fails.
+    pub fn to_json(&self) -> Result<Vec<u8>, serde_json::Error> {
+        serde_json::to_vec_pretty(self)
+    }
 }
 
 #[cfg(test)]
@@ -342,5 +350,56 @@ mod tests {
         idx.insert(b);
         assert!(idx.get(hash).is_some());
         assert!(idx.get(0xDEAD_BEEF).is_none());
+    }
+
+    #[test]
+    fn to_json_produces_valid_json() {
+        let mut idx = CrashIndex::new();
+        idx.insert(bundle(1, vec![0x01]));
+        idx.insert(bundle(2, vec![0x02]));
+
+        let summary = idx.summary();
+        let json_bytes = summary.to_json().unwrap();
+        let json_str = String::from_utf8(json_bytes).unwrap();
+
+        // Verify it's valid JSON by parsing it
+        let parsed: CrashIndexSummary = serde_json::from_str(&json_str).unwrap();
+        assert_eq!(parsed.unique_signatures, summary.unique_signatures);
+        assert_eq!(parsed.total_crashes, summary.total_crashes);
+        assert_eq!(parsed.groups.len(), summary.groups.len());
+    }
+
+    #[test]
+    fn to_json_roundtrip_preserves_data() {
+        let mut idx = CrashIndex::new();
+        for _ in 0..3 {
+            idx.insert(bundle(1, vec![0x01]));
+        }
+        idx.insert(bundle(2, vec![0x02]));
+
+        let summary = idx.summary();
+        let json_bytes = summary.to_json().unwrap();
+        let parsed: CrashIndexSummary = serde_json::from_slice(&json_bytes).unwrap();
+
+        assert_eq!(parsed, summary);
+    }
+
+    #[test]
+    fn to_json_includes_all_fields() {
+        let mut idx = CrashIndex::new();
+        idx.insert(bundle(42, vec![0xAA, 0xBB]));
+
+        let summary = idx.summary();
+        let json_bytes = summary.to_json().unwrap();
+        let json_str = String::from_utf8(json_bytes).unwrap();
+
+        // Verify the JSON contains expected field names
+        assert!(json_str.contains("unique_signatures"));
+        assert!(json_str.contains("total_crashes"));
+        assert!(json_str.contains("groups"));
+        assert!(json_str.contains("signature_hash"));
+        assert!(json_str.contains("category"));
+        assert!(json_str.contains("count"));
+        assert!(json_str.contains("newest_seed_id"));
     }
 }
