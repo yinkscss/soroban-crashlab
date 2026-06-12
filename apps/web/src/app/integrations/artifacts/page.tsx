@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import ArtifactStorageIntegration from '../../integrate-storage-backend-integration-for-artifacts';
 

@@ -1,138 +1,252 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
-  --background: #ffffff;
-  --foreground: #171717;
-
-  --status-running-bg: #dbeafe;
-  --status-running-fg: #1d4ed8;
-  --header-border-color: rgba(0, 0, 0, 0.08);
-  --status-running-border: #bfdbfe;
-
-  --status-completed-bg: #dcfce7;
-  --status-completed-fg: #15803d;
-  --status-completed-border: #bbf7d0;
-
-  --status-failed-bg: #fee2e2;
-  --status-failed-fg: #b91c1c;
-  --status-failed-border: #fecaca;
-
-  --status-cancelled-bg: #f4f4f5;
-  --status-cancelled-fg: #3f3f46;
-  --status-cancelled-border: #e4e4e7;
+  --color-crt: #00ff41;
+  --color-crt-dim: #00cc33;
+  --color-crt-glow: rgba(0, 255, 65, 0.15);
+  --color-crt-bg: #0c0c0c;
+  --color-crt-surface: #111111;
+  --color-crt-border: #1a1a1a;
+  --color-crt-text: #c0c0c0;
+  --color-crt-muted: #606060;
+  --color-crt-amber: #ffb000;
+  --color-crt-red: #ff3355;
+  --color-crt-blue: #3388ff;
+  --color-crt-green: #00ff41;
+  --color-crt-purple: #aa66ff;
 }
 
-@layer theme {
-  .dark {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-
-    --status-running-bg: #1e3a5f;
-    --status-running-fg: #93c5fd;
-    --header-border-color: rgba(255, 255, 255, 0.145);
-    --status-running-border: #1e40af;
-
-    --status-completed-bg: #14532d;
-    --status-completed-fg: #86efac;
-    --status-completed-border: #166534;
-
-    --status-failed-bg: #4c1d1d;
-    --status-failed-fg: #fca5a5;
-    --status-failed-border: #7f1d1d;
-
-    --status-cancelled-bg: #27272a;
-    --status-cancelled-fg: #d4d4d8;
-    --status-cancelled-border: #3f3f46;
-  }
-
-  @theme inline {
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-    --font-sans: var(--font-geist-sans);
-    --font-mono: var(--font-geist-mono);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --background: #0a0a0a;
-      --foreground: #ededed;
-
-      --status-running-bg: #1e3a5f;
-      --status-running-fg: #93c5fd;
-      --status-running-border: #1e40af;
-
-      --status-completed-bg: #14532d;
-      --status-completed-fg: #86efac;
-      --status-completed-border: #166534;
-
-      --status-failed-bg: #4c1d1d;
-      --status-failed-fg: #fca5a5;
-      --status-failed-border: #7f1d1d;
-
-      --status-cancelled-bg: #27272a;
-      --status-cancelled-fg: #d4d4d8;
-      --status-cancelled-border: #3f3f46;
-    }
-  }
+html, body {
+  background: #0c0c0c;
+  color: #c0c0c0;
+  font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", "Consolas", monospace;
 }
 
-/* Pragmatic overrides: map common light utility classes to the
-   dark-mode CSS variables when `.dark` is present. This helps ensure
-   elements that were given explicit Tailwind light utilities (e.g.
-   `bg-white`, `bg-zinc-50`, `text-zinc-900`) will visually switch
-   when the `.dark` class is toggled. These selectors are intentionally
-   broad to cover many utility patterns; we can refine them later. */
-html.dark [class*="bg-white"],
-html.dark [class*="bg-zinc-50"],
-html.dark [class*="bg-zinc-100"],
-html.dark [class*="bg-zinc-200"] {
-  background-color: var(--background) !important;
+::selection {
+  background: rgba(0, 255, 65, 0.3);
+  color: #00ff41;
 }
 
-html.dark [class*="text-zinc-900"],
-html.dark [class*="text-black"],
-html.dark [class*="text-gray-900"] {
-  color: var(--foreground) !important;
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-/* Ensure border colors that reference black-ish tokens don't stay too
-   visible in dark mode. This is conservative — adjust values if you
-   want different border contrast in dark theme. */
-html.dark [class*="border-black"],
-html.dark [class*="border-gray-200"],
-html.dark [class*="border-zinc-200"] {
-  --tw-border-opacity: 0.18;
-  border-color: rgba(255, 255, 255, var(--tw-border-opacity)) !important;
+::-webkit-scrollbar-track {
+  background: #0c0c0c;
 }
 
-/* Explicit class selectors for very common utilities that may not be
-   caught by substring-match selectors in some browsers/contexts. */
-html.dark .bg-white {
-  background-color: var(--background) !important;
-}
-html.dark .bg-zinc-50 {
-  background-color: var(--background) !important;
-}
-html.dark .text-zinc-900 {
-  color: var(--foreground) !important;
-}
-html.dark .text-black {
-  color: var(--foreground) !important;
+::-webkit-scrollbar-thumb {
+  background: #1a1a1a;
+  border-radius: 3px;
 }
 
-/* Header border specific override (covers the `border-black/[.08]` utility) */
-/* Header-specific override to ensure header background and border
-   match the dark theme when toggled. */
-html.dark header {
-  background-color: var(--background) !important;
-  color: var(--foreground) !important;
-  --tw-border-opacity: 0.145;
-  border-color: rgba(255, 255, 255, var(--tw-border-opacity)) !important;
+::-webkit-scrollbar-thumb:hover {
+  background: #2a2a2a;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.crt-text {
+  color: #00ff41;
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.3);
+}
+
+.crt-glow {
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.08), inset 0 0 20px rgba(0, 255, 65, 0.02);
+}
+
+.crt-border {
+  border-color: #1a1a1a;
+}
+
+.crt-border:hover {
+  border-color: #2a2a2a;
+}
+
+.crt-input {
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  color: #00ff41;
+  font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+}
+
+.crt-input:focus {
+  outline: none;
+  border-color: #00ff41;
+  box-shadow: 0 0 12px rgba(0, 255, 65, 0.1);
+}
+
+.crt-input::placeholder {
+  color: #303030;
+}
+
+.crt-button {
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  color: #00ff41;
+  font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+  transition: all 0.15s ease;
+}
+
+.crt-button:hover {
+  border-color: #00ff41;
+  box-shadow: 0 0 12px rgba(0, 255, 65, 0.1);
+}
+
+.crt-panel {
+  background: #111111;
+  border: 1px solid #1a1a1a;
+  border-radius: 4px;
+}
+
+.crt-card {
+  background: #111111;
+  border: 1px solid #1a1a1a;
+  border-radius: 4px;
+  transition: border-color 0.15s ease;
+}
+
+.crt-card:hover {
+  border-color: #2a2a2a;
+}
+
+.crt-divider {
+  height: 1px;
+  background: #1a1a1a;
+}
+
+.crt-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: 1px solid #1a1a1a;
+  border-radius: 2px;
+  background: #0a0a0a;
+  color: #00ff41;
+}
+
+.crt-badge-running {
+  border-color: #3388ff;
+  color: #3388ff;
+}
+
+.crt-badge-completed {
+  border-color: #00ff41;
+  color: #00ff41;
+}
+
+.crt-badge-failed {
+  border-color: #ff3355;
+  color: #ff3355;
+}
+
+.crt-badge-cancelled {
+  border-color: #606060;
+  color: #606060;
+}
+
+.crt-link {
+  color: #3388ff;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.crt-link:hover {
+  color: #00ff41;
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.3);
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 4px rgba(0, 255, 65, 0.1); }
+  50% { box-shadow: 0 0 16px rgba(0, 255, 65, 0.2); }
+}
+
+.crt-pulse {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+.crt-scanline::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(0, 255, 65, 0.03);
+  pointer-events: none;
+  animation: scanline 8s linear infinite;
+  z-index: 9999;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.crt-cursor::after {
+  content: "_";
+  animation: blink 1s step-end infinite;
+  color: #00ff41;
+}
+
+.crt-table th {
+  background: #0a0a0a;
+  border-bottom: 1px solid #1a1a1a;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #606060;
+}
+
+.crt-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #0f0f0f;
+  font-size: 13px;
+}
+
+.crt-table tr:hover td {
+  background: rgba(0, 255, 65, 0.02);
+}
+
+.crt-tab {
+  padding: 6px 14px;
+  font-size: 12px;
+  color: #606060;
+  border: 1px solid transparent;
+  border-bottom: 1px solid #1a1a1a;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+}
+
+.crt-tab:hover {
+  color: #c0c0c0;
+}
+
+.crt-tab-active {
+  color: #00ff41;
+  border-bottom-color: #00ff41;
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.3);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.crt-fade-in {
+  animation: fadeIn 0.2s ease-out;
 }

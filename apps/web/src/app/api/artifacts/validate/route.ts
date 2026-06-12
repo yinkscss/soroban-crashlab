@@ -52,7 +52,7 @@ const CaseBundleSchema = z.object({
   signature: CrashSignatureSchema,
   environment: EnvironmentFingerprintSchema.nullable().optional(),
   failure_payload: z.array(z.number().int().min(0).max(255)).optional(),
-  rpc_envelope: z.record(z.unknown()).optional(),
+  rpc_envelope: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**

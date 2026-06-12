@@ -1,12 +1,8 @@
+'use client';
+
 import React from 'react';
 
 import ExternalAuthenticationIntegration from '../../integrate-external-authentication-integration';
-
-export const metadata = {
-  title: 'External Auth Integration | SorobanCrashLab',
-  description:
-    'Dashboard panel for connecting external auth providers and validating Soroban auth-mode behavior.',
-};
 
 export default function ExternalAuthenticationIntegrationPage() {
   return (

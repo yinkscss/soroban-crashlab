@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 
-import { createSentryAdapter } from "../../lib/integrations/sentry-adapter";
+import { createSentryAdapter } from "@/lib/integrations/sentry-adapter";
 import type { SentryConfig, CrashReport } from "./integrate-sentry-integration-for-crash-reporting-utils";
 
 /**
