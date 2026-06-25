@@ -20,7 +20,12 @@ export default function RunsPage() {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         if (!cancelled) {
-          setRuns(data.runs ?? []);
+          const sorted = (data.runs ?? []).slice().sort((a: FuzzingRun, b: FuzzingRun) => {
+            const ta = a.queuedAt ?? a.startedAt ?? '';
+            const tb = b.queuedAt ?? b.startedAt ?? '';
+            return tb.localeCompare(ta);
+          });
+          setRuns(sorted);
           setDataState('success');
         }
       } catch {
@@ -44,7 +49,7 @@ export default function RunsPage() {
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
           {dataState === 'success' && (
-            <span className="chip text-xs sm:text-sm">{runs.length} Runs</span>
+            <span className="chip text-xs sm:text-sm">{runs.length} Total Runs</span>
           )}
           <Link href="/" className="btn-outline text-xs sm:text-sm px-3 sm:px-6 h-8 sm:h-10">Dashboard</Link>
         </div>
@@ -82,7 +87,7 @@ export default function RunsPage() {
           <table className="data-table">
             <thead>
               <tr>
-                <th>ID</th>
+                <th>Run Identifier</th>
                 <th>Status</th>
                 <th className="hidden sm:table-cell">Area</th>
                 <th className="hidden sm:table-cell">Severity</th>
@@ -94,7 +99,7 @@ export default function RunsPage() {
             <tbody>
               {paginatedRuns.map((run) => (
                 <tr key={run.id}>
-                  <td className="code-text text-meta" style={{ maxWidth: '80px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{run.id}</td>
+                  <td className="code-text text-meta" style={{ maxWidth: '80px', overflow: 'hidden', textOverflow: 'ellipsis' }}>#{run.id.replace(/^run-/, '')}</td>
                   <td><span className={`badge badge-${run.status}`}>{run.status}</span></td>
                   <td className="hidden sm:table-cell">{run.area}</td>
                   <td className="hidden sm:table-cell" style={{ color: run.severity === 'critical' ? '#C37D16' : run.severity === 'high' ? '#CC1016' : 'var(--text-primary)' }}>
